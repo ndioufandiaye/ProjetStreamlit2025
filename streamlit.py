@@ -225,9 +225,8 @@ if df_filters is not None and not df_filters.empty:
 
     st.plotly_chart(fig_map, use_container_width=True)
 
-
-    st.subheader("DataFrame filtré")
-    # Affichage du DataFrame filtré
-    st.dataframe(df_filters)
+    # st.subheader("DataFrame filtré")
+    # # Affichage du DataFrame filtré
+    # st.dataframe(df_filters)
 else:
     st.warning("Aucune donnée ne correspond aux filtres sélectionnés.")
