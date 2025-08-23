@@ -192,7 +192,7 @@ if df_filters is not None and not df_filters.empty:
 
     # Question 8: Calculer le nombre total de vente par State en mettant en place une carte. Pour ce faire, pour chaque pays vous devez récupérer la latitude et longitude
 
-    df_state = df.groupby("State Complet")["total"].sum().reset_index()
+    df_state = df_filters.groupby("State Complet")["total"].sum().reset_index()
 
     latitudes = []
     longitudes = []
