@@ -86,7 +86,10 @@ state_latlon = {
 # Cr�ation de la nouvelle colonne
 df["State Complet"] = df["State"].map(state_mapping)
 
+# Liste des colonnes de notre dataframe qu'on souhaite filtré
 filter_cols = ["Region", "State Complet", "County", "City", "status"]
+
+# Nettoyer et normaliser le jeux de données
 for col in filter_cols:
     if df[col].dtype == 'O': 
         df[col] = df[col].astype(str)
@@ -105,9 +108,9 @@ with col2:
 mask = (df["order_date"].dt.date >= start_date) & (df["order_date"].dt.date <= end_date)
 df_filtered = df.loc[mask]
 
-# Question 2 : 2. Mettez les filtres suivants sous cette ordre (à gauche de l’application) et des multiple choix :- Région- State- Contry- City,
+# Question 2 : Mettez les filtres suivants sous cette ordre (à gauche de l’application) et des multiple choix :- Région- State- Contry- City,
 
-# === FILTRES DYNAMIQUES ===
+# FILTRES DYNAMIQUES avec Streamlit_dynaic_filter
 st.sidebar.header("Choose your filter")
 dynamic_filters = DynamicFilters(df_filtered, filters=filter_cols)
 dynamic_filters.display_filters(location='sidebar')
@@ -134,7 +137,7 @@ if df_filters is not None and not df_filters.empty:
     # Diagramme circulaire des ventes par Région
     fig_pie = px.pie(df_filters, names="Region", values="total", title="Répartition des ventes par région")
     #Diagramme en barre de la répartition des ventes par catégorie
-    fig_bar = px.bar(df_filters.groupby("category")["total"].sum().reset_index(), x="category", y="total", title="Répartition des ventes par catégorie")
+    fig_bar = px.bar(df_filters.groupby("category")["total"].sum().nlargest(10).sort_values().reset_index(), x="category", y="total", title="Répartition des ventes par catégorie")
 
     with col3:
         st.plotly_chart(fig_bar, use_container_width=True)
@@ -224,6 +227,11 @@ if df_filters is not None and not df_filters.empty:
     fig_map.update_layout(mapbox_style="carto-positron", margin=dict(l=0, r=0, t=40, b=0))
 
     st.plotly_chart(fig_map, use_container_width=True)
+
+    # fig = px.scatter_map(df_state, lat="lat", lon="lon", color="State Complet", size="total",
+    #               color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=10,
+    #               map_style="carto-positron")
+    # fig.show()
 
     # st.subheader("DataFrame filtré")
     # # Affichage du DataFrame filtré
